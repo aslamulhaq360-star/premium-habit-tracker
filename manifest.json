@@ -1,0 +1,31 @@
+
+{
+  "name": "HabitFlow - Premium Habit Tracker",
+  "short_name": "HabitFlow",
+  "description": "Your personal all-in-one habit tracker",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F5FC",
+  "theme_color": "#6755E8",
+  "categories": [
+    "lifestyle",
+    "productivity",
+    "health"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
