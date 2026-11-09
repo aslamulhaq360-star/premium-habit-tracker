@@ -489,4 +489,48 @@ button:active {
   transform: scale(.90);
 }
 
+/* PREMIUM EDIT BUTTON */
+
+.edit-btn {
+  width: 32px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #F0EDFF;
+  color: #6755E8;
+  font-size: 14px;
+  transition: .2s ease;
+}
+
+.edit-btn:active {
+  transform: scale(.90);
+}
+
+.edit-btn:hover {
+  background: #E3DCFF;
+}
+
+/* HABIT CARD RESPONSIVE */
+
+.habit-card {
+  min-width: 0;
+}
+
+.habit-info {
+  overflow: hidden;
+}
+
+.habit-info h3 {
+  word-break: break-word;
+}
+
+/* SMOOTH BUTTON ANIMATION */
+
+.complete-btn,
+.edit-btn,
+.delete-btn {
+  transition: transform .2s ease, background .2s ease;
+}
+
+
 
