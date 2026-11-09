@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6755E8">
+  <meta name="description" content="Premium All-in-One Habit Tracker">
+  <title>HabitFlow - Premium Habit Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <header class="top-header">
+      <div>
+        <p class="greeting">YOUR DAILY JOURNEY</p>
+        <h1>HabitFlow <span>✦</span></h1>
+      </div>
+      <button class="profile-btn">👤</button>
+    </header>
+
+    <main>
+      <section class="welcome-section">
+        <p>Welcome back 👋</p>
+        <h2>Small steps,<br>big changes.</h2>
+        <p class="welcome-subtitle">Make today count. Build a better you.</p>
+      </section>
+
+      <section class="progress-card">
+        <div>
+          <p>Today's Progress</p>
+          <h2 id="progress-text">0%</h2>
+          <span>Keep moving forward!</span>
+        </div>
+        <div class="progress-circle" id="progress-circle">
+          <span id="circle-text">0%</span>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span>🔥</span>
+          <h2 id="streak">0</h2>
+          <p>Day Streak</p>
+        </div>
+        <div class="stat-card">
+          <span>🏆</span>
+          <h2 id="completed">0</h2>
+          <p>Completed</p>
+        </div>
+      </section>
+
+      <section class="habits-section">
+        <div class="section-heading">
+          <div>
+            <p>TODAY'S ROUTINE</p>
+            <h2>My Habits</h2>
+          </div>
+          <button id="add-habit-btn">+ Add</button>
+        </div>
+
+        <div id="habit-list" class="habit-list">
+          <div class="empty-state">
+            <span>🌱</span>
+            <h3>Start your journey</h3>
+            <p>Add your first habit to get started.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="active">🏠<span>Home</span></button>
+      <button>✅<span>Habits</span></button>
+      <button>📅<span>Calendar</span></button>
+      <button>📊<span>Stats</span></button>
+      <button>👤<span>Profile</span></button>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
