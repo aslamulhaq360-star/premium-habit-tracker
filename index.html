@@ -71,7 +71,43 @@
         </div>
       </section>
 
-    </main>
+    
+<!-- Add Habit Modal -->
+<div id="habit-modal" class="habit-modal" style="display:none;">
+  <div class="modal-content">
+    <h2>Create New Habit</h2>
+    <p>Build a better daily routine ✨</p>
+
+    <label>Habit Name</label>
+    <input id="habit-name" type="text" placeholder="e.g. Drink Water">
+
+    <label>Choose Icon</label>
+    <input id="habit-icon" type="text" value="🌱" maxlength="8">
+
+    <label>Category</label>
+    <select id="habit-category">
+      <option>Health</option>
+      <option>Fitness</option>
+      <option>Learning</option>
+      <option>Mindfulness</option>
+      <option>Productivity</option>
+      <option>Personal</option>
+      <option>Other</option>
+    </select>
+
+    <label>Frequency</label>
+    <select id="habit-frequency">
+      <option value="daily">Every Day</option>
+      <option value="weekly">Weekly</option>
+    </select>
+
+    <div class="modal-actions">
+      <button id="cancel-habit">Cancel</button>
+      <button id="save-habit">Save Habit</button>
+    </div>
+  </div>
+</div>
+</main>
 
     <nav class="bottom-nav">
       <button class="active">🏠<span>Home</span></button>
