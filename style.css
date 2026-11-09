@@ -289,3 +289,105 @@ button:active {
     box-shadow: 0 10px 50px rgba(30,20,70,.10);
   }
 }
+
+/* PREMIUM HABIT MODAL */
+
+.habit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(24, 20, 48, .60);
+  backdrop-filter: blur(9px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 430px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 27px;
+  padding: 25px;
+  box-shadow: 0 20px 70px rgba(20, 10, 60, .25);
+  animation: modalEnter .25s ease;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-content h2 {
+  font-size: 23px;
+  font-weight: 800;
+  color: #292343;
+}
+
+.modal-content > p {
+  font-size: 12px;
+  color: #9290A5;
+  margin: 8px 0 23px;
+}
+
+.modal-content label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 17px 0 8px;
+  color: #45415E;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #EAE7F3;
+  border-radius: 13px;
+  outline: none;
+  background: #FAF9FE;
+  color: #292343;
+  font: inherit;
+  font-size: 13px;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #7865F5;
+  box-shadow: 0 0 0 3px rgba(120,101,245,.10);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 14px 8px;
+  border-radius: 13px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+#cancel-habit {
+  background: #F0EEF7;
+  color: #625D78;
+}
+
+#save-habit {
+  background: linear-gradient(135deg,#6755E8,#9875F5);
+  color: white;
+  box-shadow: 0 5px 15px rgba(103,85,232,.2);
+}
+
