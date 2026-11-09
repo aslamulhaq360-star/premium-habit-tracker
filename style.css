@@ -391,3 +391,102 @@ button:active {
   box-shadow: 0 5px 15px rgba(103,85,232,.2);
 }
 
+/* PREMIUM HABIT CARDS */
+
+.habit-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(40, 30, 90, .05);
+  border: 1px solid #F0EDF8;
+  transition: .25s ease;
+  animation: habitEnter .3s ease;
+}
+
+@keyframes habitEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.habit-icon {
+  width: 49px;
+  height: 49px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #EEE9FF, #F7F3FF);
+  font-size: 25px;
+}
+
+.habit-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.habit-info h3 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #292343;
+  overflow-wrap: anywhere;
+}
+
+.habit-info p {
+  margin-top: 5px;
+  font-size: 10px;
+  color: #9290A5;
+  font-weight: 600;
+}
+
+.complete-btn {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #F0EDFF;
+  color: #6755E8;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.habit-card.completed {
+  background: #F0FBF7;
+  border-color: #D6F4E9;
+}
+
+.habit-card.completed .habit-icon {
+  background: #DDF8ED;
+}
+
+.habit-card.completed .complete-btn {
+  background: #21B58B;
+  color: white;
+}
+
+.habit-card.completed .habit-info h3 {
+  color: #21A47F;
+}
+
+.delete-btn {
+  width: 32px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #FFF0F0;
+  font-size: 14px;
+}
+
+.habit-card button:active {
+  transform: scale(.90);
+}
+
+
