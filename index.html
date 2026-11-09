@@ -71,7 +71,42 @@
         </div>
       </section>
 
-    
+ 
+<!-- HABIT CALENDAR -->
+<section id="calendar-section" style="display:none;">
+  <div class="section-heading">
+    <div>
+      <p>YOUR ACTIVITY</p>
+      <h2>Habit Calendar</h2>
+    </div>
+  </div>
+
+  <div class="calendar-card">
+    <div class="calendar-header">
+      <button id="prev-month">❮</button>
+      <h3 id="calendar-month">November 2026</h3>
+      <button id="next-month">❯</button>
+    </div>
+
+    <div class="calendar-weekdays">
+      <span>Sun</span>
+      <span>Mon</span>
+      <span>Tue</span>
+      <span>Wed</span>
+      <span>Thu</span>
+      <span>Fri</span>
+      <span>Sat</span>
+    </div>
+
+    <div id="calendar-days" class="calendar-days"></div>
+
+    <div class="calendar-legend">
+      <span>🟢 Completed</span>
+      <span>⚪ No activity</span>
+    </div>
+  </div>
+</section>
+   
 <!-- Add Habit Modal -->
 <div id="habit-modal" class="habit-modal" style="display:none;">
   <div class="modal-content">
