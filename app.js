@@ -9,16 +9,17 @@ try {
   habits = [];
 }
 
-const today = getLocalDate();
+let editingHabitId = null;
 
 function getLocalDate() {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-
   return `${year}-${month}-${day}`;
 }
+
+const today = getLocalDate();
 
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
@@ -34,50 +35,87 @@ function escapeHTML(value) {
   })[char]);
 }
 
-// OPEN HABIT MODAL
+// OPEN MODAL FOR NEW HABIT
 function openHabitModal() {
-  document.getElementById("habit-modal").style.display = "flex";
-  document.getElementById("habit-name").focus();
-}
+  editingHabitId = null;
 
-// CLOSE HABIT MODAL
-function closeHabitModal() {
-  document.getElementById("habit-modal").style.display = "none";
+  document.querySelector(".modal-content h2").textContent =
+    "Create New Habit";
+
+  document.getElementById("save-habit").textContent =
+    "Save Habit";
+
   document.getElementById("habit-name").value = "";
   document.getElementById("habit-icon").value = "🌱";
   document.getElementById("habit-category").value = "Health";
   document.getElementById("habit-frequency").value = "daily";
+
+  document.getElementById("habit-modal").style.display = "flex";
 }
 
-// CREATE NEW HABIT
+// EDIT EXISTING HABIT
+function editHabit(id) {
+  const habit = habits.find(item => item.id === id);
+  if (!habit) return;
+
+  editingHabitId = id;
+
+  document.querySelector(".modal-content h2").textContent =
+    "Edit Habit";
+
+  document.getElementById("save-habit").textContent =
+    "Update Habit";
+
+  document.getElementById("habit-name").value = habit.name;
+  document.getElementById("habit-icon").value = habit.icon || "🌱";
+  document.getElementById("habit-category").value =
+    habit.category || "Personal";
+  document.getElementById("habit-frequency").value =
+    habit.frequency || "daily";
+
+  document.getElementById("habit-modal").style.display = "flex";
+}
+
+// CLOSE MODAL
+function closeHabitModal() {
+  document.getElementById("habit-modal").style.display = "none";
+  editingHabitId = null;
+}
+
+// SAVE NEW OR UPDATED HABIT
 function createHabit() {
-  const nameInput = document.getElementById("habit-name");
-  const iconInput = document.getElementById("habit-icon");
-
-  const name = nameInput.value.trim();
-  const icon = iconInput.value.trim() || "🌱";
-
+  const name = document.getElementById("habit-name").value.trim();
+  const icon = document.getElementById("habit-icon").value.trim() || "🌱";
   const category = document.getElementById("habit-category").value;
   const frequency = document.getElementById("habit-frequency").value;
 
   if (!name) {
     alert("Please enter a habit name!");
-    nameInput.focus();
+    document.getElementById("habit-name").focus();
     return;
   }
 
-  const newHabit = {
-    id: Date.now(),
-    name: name,
-    icon: icon,
-    category: category,
-    frequency: frequency,
-    color: "#6755E8",
-    completedDates: [],
-    createdAt: today
-  };
+  if (editingHabitId !== null) {
+    const habit = habits.find(item => item.id === editingHabitId);
 
-  habits.push(newHabit);
+    if (habit) {
+      habit.name = name;
+      habit.icon = icon;
+      habit.category = category;
+      habit.frequency = frequency;
+    }
+  } else {
+    habits.push({
+      id: Date.now(),
+      name,
+      icon,
+      category,
+      frequency,
+      color: "#6755E8",
+      completedDates: [],
+      createdAt: today
+    });
+  }
 
   saveData();
   renderHabits();
@@ -87,7 +125,6 @@ function createHabit() {
 // COMPLETE / UNCOMPLETE HABIT
 function toggleHabit(id) {
   const habit = habits.find(item => item.id === id);
-
   if (!habit) return;
 
   if (!Array.isArray(habit.completedDates)) {
@@ -108,9 +145,7 @@ function toggleHabit(id) {
 
 // DELETE HABIT
 function deleteHabit(id) {
-  const confirmed = confirm("Do you want to delete this habit?");
-
-  if (!confirmed) return;
+  if (!confirm("Do you want to delete this habit?")) return;
 
   habits = habits.filter(habit => habit.id !== id);
 
@@ -143,7 +178,7 @@ function updateProgress() {
     completedToday;
 }
 
-// CALCULATE CURRENT STREAK
+// CALCULATE STREAK
 function calculateStreak() {
   if (habits.length === 0) return 0;
 
@@ -156,9 +191,8 @@ function calculateStreak() {
   });
 
   let checkDate = new Date();
-  const todayString = getLocalDate();
 
-  if (!allDates.has(todayString)) {
+  if (!allDates.has(today)) {
     checkDate.setDate(checkDate.getDate() - 1);
   }
 
@@ -211,21 +245,23 @@ function renderHabits() {
             </p>
           </div>
 
-          <button
-            class="complete-btn"
+          <button class="complete-btn"
             data-action="toggle"
-            data-id="${habit.id}"
-            aria-label="Complete habit"
-          >
+            data-id="${habit.id}">
             ${completed ? "✓" : "○"}
           </button>
 
-          <button
-            class="delete-btn"
+          <button class="edit-btn"
+            data-action="edit"
+            data-id="${habit.id}"
+            aria-label="Edit habit">
+            ✏️
+          </button>
+
+          <button class="delete-btn"
             data-action="delete"
             data-id="${habit.id}"
-            aria-label="Delete habit"
-          >
+            aria-label="Delete habit">
             🗑️
           </button>
         </div>
@@ -239,7 +275,7 @@ function renderHabits() {
   updateProgress();
 }
 
-// BUTTON EVENTS
+// MAIN BUTTON EVENTS
 document.getElementById("add-habit-btn")
   .addEventListener("click", openHabitModal);
 
@@ -252,24 +288,18 @@ document.getElementById("save-habit")
 // HABIT ACTIONS
 document.getElementById("habit-list")
   .addEventListener("click", event => {
-
     const button = event.target.closest("button[data-action]");
-
     if (!button) return;
 
     const id = Number(button.dataset.id);
     const action = button.dataset.action;
 
-    if (action === "toggle") {
-      toggleHabit(id);
-    }
-
-    if (action === "delete") {
-      deleteHabit(id);
-    }
+    if (action === "toggle") toggleHabit(id);
+    if (action === "edit") editHabit(id);
+    if (action === "delete") deleteHabit(id);
   });
 
-// CLOSE MODAL BY CLICKING OUTSIDE
+// CLOSE MODAL OUTSIDE CLICK
 document.getElementById("habit-modal")
   .addEventListener("click", event => {
     if (event.target.id === "habit-modal") {
@@ -277,5 +307,5 @@ document.getElementById("habit-modal")
     }
   });
 
-// INITIALIZE APP
+// INITIALIZE
 renderHabits();
