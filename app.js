@@ -11,6 +11,7 @@ try {
 
 let editingHabitId = null;
 
+// LOCAL DATE
 function getLocalDate() {
   const date = new Date();
   const year = date.getFullYear();
@@ -20,6 +21,10 @@ function getLocalDate() {
 }
 
 const today = getLocalDate();
+
+// CALENDAR MONTH
+let calendarDate = new Date();
+calendarDate.setDate(1);
 
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
@@ -35,15 +40,12 @@ function escapeHTML(value) {
   })[char]);
 }
 
-// OPEN MODAL FOR NEW HABIT
+// OPEN NEW HABIT MODAL
 function openHabitModal() {
   editingHabitId = null;
 
-  document.querySelector(".modal-content h2").textContent =
-    "Create New Habit";
-
-  document.getElementById("save-habit").textContent =
-    "Save Habit";
+  document.querySelector(".modal-content h2").textContent = "Create New Habit";
+  document.getElementById("save-habit").textContent = "Save Habit";
 
   document.getElementById("habit-name").value = "";
   document.getElementById("habit-icon").value = "🌱";
@@ -53,25 +55,20 @@ function openHabitModal() {
   document.getElementById("habit-modal").style.display = "flex";
 }
 
-// EDIT EXISTING HABIT
+// EDIT HABIT
 function editHabit(id) {
   const habit = habits.find(item => item.id === id);
   if (!habit) return;
 
   editingHabitId = id;
 
-  document.querySelector(".modal-content h2").textContent =
-    "Edit Habit";
-
-  document.getElementById("save-habit").textContent =
-    "Update Habit";
+  document.querySelector(".modal-content h2").textContent = "Edit Habit";
+  document.getElementById("save-habit").textContent = "Update Habit";
 
   document.getElementById("habit-name").value = habit.name;
   document.getElementById("habit-icon").value = habit.icon || "🌱";
-  document.getElementById("habit-category").value =
-    habit.category || "Personal";
-  document.getElementById("habit-frequency").value =
-    habit.frequency || "daily";
+  document.getElementById("habit-category").value = habit.category || "Personal";
+  document.getElementById("habit-frequency").value = habit.frequency || "daily";
 
   document.getElementById("habit-modal").style.display = "flex";
 }
@@ -82,7 +79,7 @@ function closeHabitModal() {
   editingHabitId = null;
 }
 
-// SAVE NEW OR UPDATED HABIT
+// SAVE HABIT
 function createHabit() {
   const name = document.getElementById("habit-name").value.trim();
   const icon = document.getElementById("habit-icon").value.trim() || "🌱";
@@ -132,9 +129,7 @@ function toggleHabit(id) {
   }
 
   if (habit.completedDates.includes(today)) {
-    habit.completedDates = habit.completedDates.filter(
-      date => date !== today
-    );
+    habit.completedDates = habit.completedDates.filter(date => date !== today);
   } else {
     habit.completedDates.push(today);
   }
@@ -165,17 +160,13 @@ function updateProgress() {
     ? 0
     : Math.round((completedToday / total) * 100);
 
-  document.getElementById("progress-text").textContent =
-    percentage + "%";
-
-  document.getElementById("circle-text").textContent =
-    percentage + "%";
+  document.getElementById("progress-text").textContent = percentage + "%";
+  document.getElementById("circle-text").textContent = percentage + "%";
 
   document.getElementById("progress-circle").style.background =
     `conic-gradient(#6755E8 ${percentage}%, #EDEAF8 ${percentage}%)`;
 
-  document.getElementById("completed").textContent =
-    completedToday;
+  document.getElementById("completed").textContent = completedToday;
 }
 
 // CALCULATE STREAK
@@ -185,9 +176,7 @@ function calculateStreak() {
   const allDates = new Set();
 
   habits.forEach(habit => {
-    (habit.completedDates || []).forEach(date => {
-      allDates.add(date);
-    });
+    (habit.completedDates || []).forEach(date => allDates.add(date));
   });
 
   let checkDate = new Date();
@@ -240,8 +229,7 @@ function renderHabits() {
             <h3>${escapeHTML(habit.name)}</h3>
             <p>
               ${escapeHTML(habit.category || "Personal")}
-              ·
-              ${habit.frequency === "weekly" ? "Weekly" : "Daily"}
+              · ${habit.frequency === "weekly" ? "Weekly" : "Daily"}
             </p>
           </div>
 
@@ -254,26 +242,142 @@ function renderHabits() {
           <button class="edit-btn"
             data-action="edit"
             data-id="${habit.id}"
-            aria-label="Edit habit">
-            ✏️
-          </button>
+            aria-label="Edit habit">✏️</button>
 
           <button class="delete-btn"
             data-action="delete"
             data-id="${habit.id}"
-            aria-label="Delete habit">
-            🗑️
-          </button>
+            aria-label="Delete habit">🗑️</button>
         </div>
       `;
     }).join("");
   }
 
-  document.getElementById("streak").textContent =
-    calculateStreak();
+  document.getElementById("streak").textContent = calculateStreak();
 
   updateProgress();
+  renderCalendar();
 }
+
+// RENDER HABIT CALENDAR
+function renderCalendar() {
+  const calendarDays = document.getElementById("calendar-days");
+  const calendarMonth = document.getElementById("calendar-month");
+
+  if (!calendarDays || !calendarMonth) return;
+
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+
+  const monthName = calendarDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
+
+  calendarMonth.textContent = monthName;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  const completedDates = new Set();
+
+  habits.forEach(habit => {
+    (habit.completedDates || []).forEach(date => {
+      completedDates.add(date);
+    });
+  });
+
+  let calendarHTML = "";
+
+  // EMPTY DAYS BEFORE FIRST DATE
+  for (let i = 0; i < firstDay; i++) {
+    calendarHTML += `<div class="calendar-day empty"></div>`;
+  }
+
+  // MONTH DATES
+  for (let day = 1; day <= totalDays; day++) {
+    const monthString = String(month + 1).padStart(2, "0");
+    const dayString = String(day).padStart(2, "0");
+
+    const dateString = `${year}-${monthString}-${dayString}`;
+
+    const isCompleted = completedDates.has(dateString);
+    const isToday = dateString === today;
+
+    let classes = "calendar-day";
+
+    if (isCompleted) classes += " completed";
+    if (isToday) classes += " today";
+
+    calendarHTML += `
+      <div class="${classes}">
+        ${day}
+      </div>
+    `;
+  }
+
+  calendarDays.innerHTML = calendarHTML;
+}
+
+// PREVIOUS MONTH
+document.getElementById("prev-month").addEventListener("click", () => {
+  calendarDate.setMonth(calendarDate.getMonth() - 1);
+  renderCalendar();
+});
+
+// NEXT MONTH
+document.getElementById("next-month").addEventListener("click", () => {
+  calendarDate.setMonth(calendarDate.getMonth() + 1);
+  renderCalendar();
+});
+
+// SHOW HOME OR CALENDAR
+const homeSections = [
+  document.querySelector(".welcome-section"),
+  document.querySelector(".progress-card"),
+  document.querySelector(".stats-grid"),
+  document.querySelector(".habits-section")
+];
+
+const calendarSection = document.getElementById("calendar-section");
+
+function showHome() {
+  homeSections.forEach(section => {
+    section.style.display = "";
+  });
+
+  calendarSection.style.display = "none";
+}
+
+function showCalendar() {
+  homeSections.forEach(section => {
+    section.style.display = "none";
+  });
+
+  calendarSection.style.display = "block";
+  renderCalendar();
+}
+
+// BOTTOM NAVIGATION
+document.querySelectorAll(".bottom-nav button").forEach(button => {
+  button.addEventListener("click", () => {
+    const label = button.querySelector("span")?.textContent.trim();
+
+    if (label === "Home") {
+      showHome();
+    } else if (label === "Calendar") {
+      showCalendar();
+    } else {
+      return;
+    }
+
+    document.querySelectorAll(".bottom-nav button").forEach(navButton => {
+      navButton.classList.remove("active");
+    });
+
+    button.classList.add("active");
+  });
+});
 
 // MAIN BUTTON EVENTS
 document.getElementById("add-habit-btn")
@@ -286,26 +390,25 @@ document.getElementById("save-habit")
   .addEventListener("click", createHabit);
 
 // HABIT ACTIONS
-document.getElementById("habit-list")
-  .addEventListener("click", event => {
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
+document.getElementById("habit-list").addEventListener("click", event => {
+  const button = event.target.closest("button[data-action]");
 
-    const id = Number(button.dataset.id);
-    const action = button.dataset.action;
+  if (!button) return;
 
-    if (action === "toggle") toggleHabit(id);
-    if (action === "edit") editHabit(id);
-    if (action === "delete") deleteHabit(id);
-  });
+  const id = Number(button.dataset.id);
+  const action = button.dataset.action;
+
+  if (action === "toggle") toggleHabit(id);
+  if (action === "edit") editHabit(id);
+  if (action === "delete") deleteHabit(id);
+});
 
 // CLOSE MODAL OUTSIDE CLICK
-document.getElementById("habit-modal")
-  .addEventListener("click", event => {
-    if (event.target.id === "habit-modal") {
-      closeHabitModal();
-    }
-  });
+document.getElementById("habit-modal").addEventListener("click", event => {
+  if (event.target.id === "habit-modal") {
+    closeHabitModal();
+  }
+});
 
-// INITIALIZE
+// INITIALIZE APP
 renderHabits();
